@@ -145,7 +145,7 @@ def has_roles(roles):
     assert len(roles) > 0, 'You must provide at least one group name'
 
     if len(roles) > 3:
-        r = roles[:3] + ('...',)
+        r = roles[:3] + ['...',]
     else:
         r = roles
 
@@ -155,7 +155,7 @@ def has_roles(roles):
     def fn(user):
         if not hasattr(user, 'roles'):
             return False  # swapped user model, doesn't support groups
-        return set(roles).issubset(user.roles)
+        return set(roles).intersection(user.roles)
 
     return fn
 
