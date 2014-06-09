@@ -37,6 +37,12 @@ class TestAcl(unittest.TestCase):
         self.assertTrue(self.permissions.has("books.edit", self.manager))
         self.assertFalse(self.permissions.has("books.edit", self.staff))
 
+    def test_has_roles(self):
+        self.permissions.add("books.edit", predicates.has_roles(["manager", "developer", "other", "r"]))
+        self.assertTrue(self.permissions.has("books.edit", self.superuser))
+        self.assertTrue(self.permissions.has("books.edit", self.manager))
+        self.assertFalse(self.permissions.has("books.edit", self.staff))
+
     def test_is_author(self):
         user = User()
         user_two = User()
