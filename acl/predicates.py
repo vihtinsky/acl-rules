@@ -109,8 +109,8 @@ def predicate_context_only(fn=None, name=None):
 def predicate_with_context(fn=None, name=None):
     return predicate(fn=fn, name=name, num_args=2, with_kwargs=True)
 
-always_allow = predicate(lambda: True, name='always_allow')
-always_deny  = predicate(lambda: False, name='always_deny')
+always_allow = predicate(lambda x: True, name='always_allow', num_args=1)
+always_deny  = predicate(lambda x: False, name='always_deny', num_args=1)
 
 
 @predicate_user_only
@@ -145,7 +145,7 @@ def has_roles(roles):
     assert len(roles) > 0, 'You must provide at least one group name'
 
     if len(roles) > 3:
-        r = roles[:3] + ('...',)
+        r = roles[:3] + ['...',]
     else:
         r = roles
 
@@ -155,7 +155,7 @@ def has_roles(roles):
     def fn(user):
         if not hasattr(user, 'roles'):
             return False  # swapped user model, doesn't support groups
-        return set(roles).issubset(user.roles)
+        return set(roles).intersection(user.roles)
 
     return fn
 

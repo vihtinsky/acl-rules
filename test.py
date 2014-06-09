@@ -88,12 +88,23 @@ class TestAcl(unittest.TestCase):
         self.permissions.add("books.edit", predicates.has_roles(["manager"]))
         pd = predicates.has_roles(["manager"])
         self.permissions.add_and("books.edit", allow_all)
-        #self.assertTrue(self.permissions.has("books.edit", self.superuser))
-        #self.assertFalse(self.permissions.has("books.edit", self.manager))
-        #self.assertFalse(self.permissions.has("books.edit", self.staff))
+        self.assertTrue(self.permissions.has("books.edit", self.superuser))
+        self.assertFalse(self.permissions.has("books.edit", self.manager))
+        self.assertFalse(self.permissions.has("books.edit", self.staff))
         self.assertTrue(self.permissions.has("books.edit", self.manager, project_id=8))
         self.assertFalse(self.permissions.has("books.edit", self.staff, project_id=8))
 
+    def test_always(self):
+        user = User()
+        user_two = User()
+        book = Book(user)
+        self.permissions.add("books.edit", predicates.always_allow)
+        self.assertTrue(self.permissions.has("books.edit", self.superuser, book))
+        self.assertTrue(self.permissions.has("books.edit", self.manager, book))
+        self.assertTrue(self.permissions.has("books.edit", self.staff))
+        self.assertTrue(self.permissions.has("books.edit",user, book,  a="33"))
+        self.assertTrue(self.permissions.has("books.edit",user_two, book))
+        self.assertTrue(self.permissions.has("books.edit",user))
 
 if __name__ == '__main__':
     unittest.main()
